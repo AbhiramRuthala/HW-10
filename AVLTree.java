@@ -2,7 +2,7 @@ package tree;
 // Name: Abhiram Ruthala
 // Computing ID: kas4kj@virginia.edu
 // Homework Name: HW 10
-// Resources used:
+// Resources used: ChatGPT-5 for Debugging
 
 /**
  * Self-balancing AVL Tree
@@ -20,7 +20,7 @@ public class AVLTree<T extends Comparable<T>> extends BinarySearchTree<T>{
 	protected TreeNode<T> insert(T data, TreeNode<T> curNode) {
 		//TODO: Implement this method
         super.insert(data, curNode);
-		return null;
+		return balance(curNode);
 	}
 
 	
@@ -60,9 +60,22 @@ public class AVLTree<T extends Comparable<T>> extends BinarySearchTree<T>{
 		//return curNode.left == curNode.right ? curNode : balance(curNode.left);
 
         if(sense > 1) {
-            return rotateLeft(curNode);
+            if(height(curNode.left.left) >= height(curNode.left.right)) {
+                return rotateRight(curNode);
+            } else{
+                curNode.left = rotateLeft(curNode.left);
+                return rotateRight(curNode);
+
+            }
+
         } else {
-            return rotateRight(curNode);
+            if(height(curNode.right.right) >= height(curNode.right.left)) {
+                return rotateLeft(curNode);
+            } else {
+                curNode.right = rotateRight(curNode.right);
+                return rotateLeft(curNode);
+            }
+
         }
 
         //gotta return the rotations.
@@ -71,44 +84,60 @@ public class AVLTree<T extends Comparable<T>> extends BinarySearchTree<T>{
 	private TreeNode<T> rotateRight(TreeNode<T> curNode) {
 		//TODO: Implement this method
         if(curNode.left == null) return curNode;
-        if(curNode != null && curNode.left != null && curNode.left.left != null) {
-            TreeNode<T> temp = curNode;
-            TreeNode<T> temp2 = curNode.left.left;
-            curNode = curNode.left;
-            curNode.right = temp;
-            curNode.left = temp2;
 
-            return curNode;
-        }
-		return null;
+        TreeNode<T> temp = curNode.left;
+        TreeNode<T> right = temp.right;
+
+        temp.right = curNode;
+        curNode.left = right;
+
+        temp.height = Math.max(height(temp.left), height(temp.right))+1;
+        curNode.height = Math.max(height(curNode.left), height(curNode.right))+1;
+
+        return temp;
+
+
+
+
+//        if(curNode != null && curNode.left != null && curNode.left.left != null) {
+//            TreeNode<T> temp = curNode;
+//            TreeNode<T> temp2 = curNode.left.left;
+//            curNode = curNode.left;
+//            curNode.right = temp;
+//            curNode.left = temp2;
+//
+//            return curNode;
+//        }
 	}
 	
 	private TreeNode<T> rotateLeft(TreeNode<T> curNode){
 		//TODO: Implement this method
-        if(curNode.right == null) return curNode;
-        if(curNode != null && curNode.right != null && curNode.right.right != null) {
-            TreeNode<T> temp = curNode;
-            TreeNode<T> temp2 = curNode.right.right;
-            curNode = curNode.right;
-            curNode.left = temp;
-            curNode.right = temp2;
+        if(curNode.left == null) return curNode;
 
-            return curNode;
-        }
-        return null;
+        TreeNode<T> temp = curNode.right;
+        TreeNode<T> right = temp.left;
+
+        temp.left = curNode;
+        curNode.right = right;
+
+        temp.height = Math.max(height(temp.left), height(temp.right))+1;
+        curNode.height = Math.max(height(curNode.left), height(curNode.right))+1;
+
+        return temp;
 	}
 	
 	private int balanceFactor(TreeNode<T> node) {
 		//TODO: Implement this method
+        if(node == null) return 0;
         int sense1 = height(node.left);
         int sense2 = height(node.right);
-        if(node.left != null) {
-            return 1 + balanceFactor(node.left);
-        }
-
-        if (node.right != null) {
-            return 1 + balanceFactor(node.right);
-        }
+//        if(node.left != null) {
+//            return 1 + balanceFactor(node.left);
+//        }
+//
+//        if (node.right != null) {
+//            return 1 + balanceFactor(node.right);
+//        }
 
         return sense1 - sense2;
 
