@@ -81,7 +81,7 @@ public class AVLTree<T extends Comparable<T>> extends BinarySearchTree<T>{
 
             }
 
-        } else {
+        } else if (sense < -1) {
             if(height(curNode.right.right) >= height(curNode.right.left)) {
                 return rotateLeft(curNode);
             } else {
@@ -89,6 +89,8 @@ public class AVLTree<T extends Comparable<T>> extends BinarySearchTree<T>{
                 return rotateLeft(curNode);
             }
 
+        } else {
+            return curNode;
         }
 
         //gotta return the rotations.
