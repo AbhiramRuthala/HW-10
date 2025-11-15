@@ -19,7 +19,20 @@ public class AVLTree<T extends Comparable<T>> extends BinarySearchTree<T>{
 	}
 	protected TreeNode<T> insert(T data, TreeNode<T> curNode) {
 		//TODO: Implement this method
-        super.insert(data, curNode);
+        if(curNode == null){
+            return new TreeNode<>(data);
+        }
+
+        int compare = curNode.data.compareTo(data);
+        if(compare < 0){
+            curNode.left = insert(data, curNode.left);
+        } else if (compare > 0){
+            curNode.right = insert(data, curNode.right);
+        } else {
+            return curNode;
+        }
+
+        curNode.height = Math.max(height(curNode.left), height(curNode.right)) + 1;
 		return balance(curNode);
 	}
 
