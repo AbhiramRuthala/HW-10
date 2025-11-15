@@ -2,7 +2,7 @@ package tree;
 // Name: Abhiram Ruthala
 // Computing ID: kas4kj@virginia.edu
 // Homework Name: HW 10
-// Resources used: ChatGPT-5 for Debugging
+// Resources used: ChatGPT-5 for Debugging, Claude Sonnet 4.5
 
 /**
  * Self-balancing AVL Tree
@@ -73,7 +73,7 @@ public class AVLTree<T extends Comparable<T>> extends BinarySearchTree<T>{
 		//return curNode.left == curNode.right ? curNode : balance(curNode.left);
 
         if(sense > 1) {
-            if(height(curNode.left.left) >= height(curNode.left.right)) {
+            if(curNode.left != null && height(curNode.left.left) >= height(curNode.left.right)) {
                 return rotateRight(curNode);
             } else{
                 curNode.left = rotateLeft(curNode.left);
@@ -82,7 +82,7 @@ public class AVLTree<T extends Comparable<T>> extends BinarySearchTree<T>{
             }
 
         } else if (sense < -1) {
-            if(height(curNode.right.right) >= height(curNode.right.left)) {
+            if(curNode.right != null && height(curNode.right.right) >= height(curNode.right.left)) {
                 return rotateLeft(curNode);
             } else {
                 curNode.right = rotateRight(curNode.right);
@@ -110,24 +110,11 @@ public class AVLTree<T extends Comparable<T>> extends BinarySearchTree<T>{
         curNode.height = Math.max(height(curNode.left), height(curNode.right))+1;
 
         return temp;
-
-
-
-
-//        if(curNode != null && curNode.left != null && curNode.left.left != null) {
-//            TreeNode<T> temp = curNode;
-//            TreeNode<T> temp2 = curNode.left.left;
-//            curNode = curNode.left;
-//            curNode.right = temp;
-//            curNode.left = temp2;
-//
-//            return curNode;
-//        }
 	}
 	
 	private TreeNode<T> rotateLeft(TreeNode<T> curNode){
 		//TODO: Implement this method
-        if(curNode.left == null) return curNode;
+        if(curNode.right == null) return curNode;
 
         TreeNode<T> temp = curNode.right;
         TreeNode<T> right = temp.left;
